@@ -1,4 +1,4 @@
-# lab2.3_starter.py
+# task1
 import json
 from collections import defaultdict
 from datetime import datetime
@@ -86,19 +86,23 @@ for ip, times in per_ip_timestamps.items():
 print(f'Detected {len(incidents)} brute-force incidents {incidents}')
 
 
-for incident in incidents:
-    count_incidents +=1
 
 #task3
 
+from collections import Counter
 
-top_failed_ips = top_n(incidents, 10)
+ip_tot_attempts = Counter()     #count the total failed attempts per IP
+for ip, timestamps in per_ip_timestamps.items():
+    ip_tot_attempts[ip] = len(times)
+
+top_failed_ips = ip_tot_attempts.most_common(10) #count the top 10 IPs with most failed attempts
 
 print("Top 10 IPs with most failed attempts:")
-for ip, count in top_failed_ips:
-    print(f"{ip}, {count}")
+for rank, (ip, count) in enumerate(top_failed_ips,1):
+    print(f"{rank}. {ip} - {count} failed attempts")
 
 with open("bruteforce_incidents.txt", "w")as file:
-        file.write("Top 10 IPs with most failed attempts:\n")        #write hearder
-        for ip, count in top_failed_ips():
-            file.write(f"{ip}, {len(incidents)}\n")
+    file.write("BRUTE FORCE INCIDENTS REPORT\n\n")
+    file.write("Top 10 IPs with most failed attempts:\n")        #write hearder
+    for ip, count in top_failed_ips:
+        file.write(f"{ip}, {count}\n")
